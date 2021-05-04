@@ -20,3 +20,7 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 BLUETOOTH_ENABLE = no       # Enable Bluetooth
 AUDIO_ENABLE = no           # Audio output
+CUSTOM_MATRIX = lite        # Use custom matrix handlers
+
+SRC += matrix.c
+QUANTUM_LIB_SRC += i2c_master.c

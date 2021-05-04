@@ -27,8 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT      breadboard
 
 /* key matrix size */
-#define MATRIX_ROWS 2
-#define MATRIX_COLS 2
+#define MATRIX_ROWS 4
+#define MATRIX_COLS 4
+
+#define MATRIX_ROWS_PER_SIDE (MATRIX_ROWS / 2)
+#define MATRIX_COLS_PER_SIDE (MATRIX_COLS / 2)
 
 /*
  * Keyboard Matrix Assignments
@@ -40,12 +43,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-#define MATRIX_ROW_PINS { B4, B5 }
-#define MATRIX_COL_PINS { B2, B6 }
-#define UNUSED_PINS
+#define MATRIX_ROW_PINS_MCU { B4, B5 }
+#define MATRIX_COL_PINS_MCU { B2, B6 }
+#define UNUSED_PINS_MCU { A0, A1 }
+
+#define MATRIX_ROW_PINS_MCP { B0, B1 }
+#define MATRIX_COL_PINS_MCP { A0, A1 }
+
+#define MATRIX_ROW_PINS { B4, B5, F5, F5 }
+#define MATRIX_COL_PINS { B2, B6, F6, F6 }
+#define UNUSED_PINS { F5, F6 }
 
 /* COL2ROW, ROW2COL */
 #define DIODE_DIRECTION COL2ROW
+
 
 /*
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.

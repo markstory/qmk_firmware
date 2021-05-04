@@ -22,8 +22,9 @@ enum layer_names {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
+    /* Left hand                   Right hand */
     [_BASE] = LAYOUT(
-        KC_A, KC_1,
-        KC_B, KC_2
+        KC_1, KC_2,                KC_A, KC_B,
+        KC_3, KC_4,                KC_C, KC_D
     ),
 };
