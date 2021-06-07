@@ -44,14 +44,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #define MATRIX_ROW_PINS_MCU { B5, B4, E6, D7, C6 }
-#define MATRIX_COL_PINS_MCU { B6, B2, B3, B1, F7, F6 }
+#define MATRIX_COL_PINS_MCU { F6, F7, B1, B3, B2, B6 }
 #define UNUSED_PINS_MCU {}
 
 #define MATRIX_ROW_PINS_MCP { B0, B1, B2, B3, B4 }
 #define MATRIX_COL_PINS_MCP { A0, A1, A2, A3, A4, A5 }
 
 #define MATRIX_ROW_PINS { B5, B4, E6, D7, C6, A0, A0, A0, A0, A0 }
-#define MATRIX_COL_PINS { D10, D16, D14, D15, D18, D19, A1, A1, A1, A1, A1, A1 }
+#define MATRIX_COL_PINS { F6, F7, B1, B3, B2, B6, A1, A1, A1, A1, A1, A1 }
 #define UNUSED_PINS { }
 
 /* COL2ROW, ROW2COL */
