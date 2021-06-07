@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <print.h>
 
 extern i2c_status_t mcp23017_status;
-#define I2C_TIMEOUT 1000
-#define MCP23017_I2C_TIMEOUT 1000
+#define I2C_TIMEOUT 100
+#define MCP23017_I2C_TIMEOUT 100
 #define I2C_WRITE 0x00
 #define I2C_READ 0x01
 // For a better understanding of the i2c protocol, this is a good read:
