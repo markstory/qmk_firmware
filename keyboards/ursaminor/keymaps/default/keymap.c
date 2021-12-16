@@ -45,11 +45,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     /* RAISE f-keys, media controls */
     [_RAISE] = LAYOUT(
-        KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4, KC_F5,          KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
-        KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO, KC_NO,          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
-        KC_TRNS, KC_MPRV, KC_MNXT, KC_VOLU, KC_NO, KC_NO,          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
-        KC_TRNS, KC_MSTP, KC_MPLY, KC_VOLD, KC_NO, KC_NO,          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_TRNS,
-                         KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS
+        KC_F12,  KC_F1,   KC_F2,   KC_F3,            KC_F4,   KC_F5,     KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
+        KC_TRNS, KC_NO,   RGB_TOG, RGB_MODE_FORWARD, RGB_HUI, KC_NO,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
+        KC_TRNS, KC_MPRV, KC_MNXT, KC_VOLU,          RGB_SAI, KC_NO,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
+        KC_TRNS, KC_MSTP, KC_MPLY, KC_VOLD,          RGB_VAI, KC_NO,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_TRNS,                       KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
     /* MOUSE mouse */
@@ -58,6 +58,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,      KC_COPY,    KC_PASTE, KC_NO,       KC_NO,   KC_NO,
         KC_LCTRL, KC_LALT, KC_LSHIFT, KC_NO, KC_NO, KC_NO,          KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP, KC_MS_RIGHT, KC_NO,   KC_NO,
         KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,      KC_WH_D,    KC_WH_U,  KC_NO,       KC_NO,   KC_TRNS,
-                       KC_TRNS, KC_TRNS, KC_TRNS,                     KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2
+                       KC_TRNS, KC_TRNS, KC_TRNS,                      KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2
     )
 };
