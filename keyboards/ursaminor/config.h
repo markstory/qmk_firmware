@@ -43,12 +43,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-//# TODO Define these correctly.
 #define MATRIX_ROW_PINS_MCU { B6, B5, B1, D7, D6 }
 #define MATRIX_COL_PINS_MCU { B3, B2, B4, F0, F1, F4 }
 #define UNUSED_PINS_MCU {}
 
-//# TODO Define these correctly.
 #define MATRIX_ROW_PINS_MCP { B0, B1, B2, B3, B4 }
 #define MATRIX_COL_PINS_MCP { A0, A1, A2, A3, A4, A5 }
 
