@@ -19,7 +19,7 @@
 /*
  * Driver addresses to LED matrix
  */
-const is31_led __flash g_is31_leds[DRIVER_LED_TOTAL] = {
+const is31_led PROGMEM g_is31_leds[DRIVER_LED_TOTAL] = {
 /* Refer to IS31 manual for these locations
  *   driver
  *   |  R location
@@ -39,7 +39,7 @@ const is31_led __flash g_is31_leds[DRIVER_LED_TOTAL] = {
      {1, E_1, D_1, F_1}, {1, E_2, D_2, F_2}, {1, E_3, D_3, F_3}, {1, E_4, D_4, F_4}, {1, E_5, D_5, F_5}, {1, E_6, D_6, F_6},
      {1, B_1, A_1, C_1}, {1, B_2, A_2, C_2}, {1, B_3, A_3, C_3}, {1, B_4, A_4, C_4}, {1, B_5, A_5, C_5}, {1, B_6, A_6, C_6},
      {1, B_7, A_7, C_7}, {1, B_8, A_8, C_8}, {1, B_9, A_9, C_9}
-}
+};
 
 /*
  * Key switch to LED mappings
@@ -94,4 +94,4 @@ led_config_t g_led_config = {
         LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_MODIFIER,
         LED_FLAG_MODIFIER, LED_FLAG_ALL, LED_FLAG_MODIFIER, LED_FLAG_NONE, LED_FLAG_NONE, LED_FLAG_NONE
     }
-}
+};
