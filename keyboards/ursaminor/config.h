@@ -72,6 +72,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Right LED driver.
 #define DRIVER_ADDR_2 0b1010001
 
+// RGB animations
+#define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
+#define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
+#define ENABLE_RGB_MATRIX_BREATHING
+#define ENABLE_RGB_MATRIX_BAND_SAT
+#define ENABLE_RGB_MATRIX_BAND_VAL
+#define ENABLE_RGB_MATRIX_BAND_PINWHEEL_SAT
+#define ENABLE_RGB_MATRIX_BAND_PINWHEEL_VAL
+
+// Default RGB mode on startup
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_BREATHING
+
 //#define LED_NUM_LOCK_PIN B0
 //#define LED_CAPS_LOCK_PIN B1
 //#define LED_SCROLL_LOCK_PIN B2
