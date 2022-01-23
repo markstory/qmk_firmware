@@ -26,7 +26,7 @@
  * The second converts the arguments into a two-dimensional array which
  * represents the switch matrix.
  */
-/* left hand            right hand */
+// left hand            right hand
 #define LAYOUT( \
     K0_0, K0_1, K0_2, K0_3, K0_4, K0_5,        K0_6, K0_7, K0_8, K0_9, K0_10, K0_11,\
     K1_0, K1_1, K1_2, K1_3, K1_4, K1_5,        K1_6, K1_7, K1_8, K1_9, K1_10, K1_11,\

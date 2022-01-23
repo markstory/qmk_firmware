@@ -24,8 +24,8 @@ enum layer_names {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    /* Base */
-    /* Left hand                                             Right hand */
+    // Base
+    // Left hand                                             Right hand
     [_QWERTY] = LAYOUT(
         KC_GRAVE,  KC_1, KC_2, KC_3, KC_4, KC_5,             KC_6, KC_7, KC_8,     KC_9,   KC_0,      KC_DEL,
         KC_TAB,    KC_Q, KC_W, KC_E, KC_R, KC_T,             KC_Y, KC_U, KC_I,     KC_O,   KC_P,      KC_BSLASH,
@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                MO(_LOWER), LT(_MOUSE, KC_ENT), GUI_T(KC_ESC),  ALT_T(KC_BSPACE), KC_SPACE, MO(_RAISE)
     ),
 
-    /* LOWER (symbols and navigation) */
+    // LOWER (symbols and navigation)
     [_LOWER] = LAYOUT(
         KC_NO,    KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_TRNS,
         KC_TRNS,  KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,   KC_LCBR, KC_RCBR, KC_LBRC,  KC_RBRC,  KC_TRNS,
@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              KC_TRNS, KC_TRNS, KC_TRNS,                    KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
-    /* RAISE f-keys, media controls */
+    // RAISE f-keys, media controls
     [_RAISE] = LAYOUT(
         KC_F12,  KC_F1,   KC_F2,   KC_F3,            KC_F4,   KC_F5,     KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
         KC_TRNS, KC_NO,   RGB_TOG, RGB_MODE_FORWARD, RGB_HUI, KC_NO,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          KC_TRNS, KC_TRNS, KC_TRNS,                       KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
-    /* MOUSE mouse */
+    // MOUSE mouse
     [_MOUSE] = LAYOUT(
         KC_NO,    KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,      KC_NO,      KC_NO,    KC_NO,       KC_NO,   KC_NO,
         KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,      KC_COPY,    KC_PASTE, KC_NO,       KC_NO,   KC_NO,
