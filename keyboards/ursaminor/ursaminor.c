@@ -16,6 +16,7 @@
 
 #include "ursaminor.h"
 
+#if RGB_MATRIX_ENABLE
 /*
  * Driver addresses to LED matrix
  */
@@ -94,3 +95,4 @@ led_config_t g_led_config = {
         LED_FLAG_MODIFIER, LED_FLAG_ALL, LED_FLAG_MODIFIER, LED_FLAG_NONE, LED_FLAG_NONE, LED_FLAG_NONE
     }
 };
+#endif

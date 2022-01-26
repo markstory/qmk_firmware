@@ -23,8 +23,8 @@ AUDIO_ENABLE = no           # Audio output
 CUSTOM_MATRIX = lite        # Use custom matrix handlers
 
 # Comment these out for the base version
-RGB_MATRIX_ENABLE = yes
-RGB_MATRIX_DRIVER = IS31FL3733
+#RGB_MATRIX_ENABLE = yes
+#RGB_MATRIX_DRIVER = IS31FL3733
 
 SRC += matrix.c
 QUANTUM_LIB_SRC += i2c_master.c
