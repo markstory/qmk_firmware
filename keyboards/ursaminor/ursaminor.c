@@ -53,46 +53,48 @@ led_config_t g_led_config = {
         {6,   7,  8,  9, 10, 11},
         {12, 13, 14, 15, 16, 17},
         {18, 19, 20, 21, 22, 23},
-        {NO_LED, NO_LED, NO_LED, 24, 25, 26},
+        {24, 25, 26},
+
         // Right hand
         {27, 28, 29, 30, 31, 32},
         {33, 34, 35, 36, 37, 38},
         {39, 40, 41, 42, 43, 44},
         {45, 46, 47, 48, 49, 50},
-        {51, 52, 53, NO_LED, NO_LED, NO_LED}
+        {51, 52, 53}
     },
     // LED Index to Phyiscal Position 
     // Map index to {x, y} where x = 0...224  and y = 0...64
-    // Each x increment is 224/12 = 18. Each y increment is 64/5 = 12
+    // Each x increment is 224/14 = 16. Each y increment is 64/5 = 12
     {
         // left hand
-        {0, 0},  {18, 0},  {36, 0},  {54, 0},  {72, 0},  {108, 0},
-        {0, 12}, {18, 12}, {36, 12}, {54, 12}, {72, 12}, {108, 12},
-        {0, 24}, {18, 24}, {36, 24}, {54, 24}, {72, 24}, {108, 24},
-        {0, 36}, {18, 36}, {36, 36}, {54, 36}, {72, 36}, {108, 36},
-        {0, 48}, {18, 48}, {36, 48}, {54, 48}, {72, 48}, {108, 48},
+        {0, 0},  {16, 0},  {32, 0},  {48, 0},  {64, 0},  {80, 0},
+        {0, 12}, {16, 12}, {32, 12}, {48, 12}, {64, 12}, {80, 12},
+        {0, 24}, {16, 24}, {32, 24}, {48, 24}, {64, 24}, {80, 24},
+        {0, 36}, {16, 36}, {32, 36}, {48, 36}, {64, 36}, {80, 36},
+                                              {72, 48}, {85, 48}, {96, 48},
+
         // right hand
-        {126, 0},  {144, 0},  {162, 0},  {180, 0},  {198, 0},  {216, 0},
-        {126, 12}, {144, 12}, {162, 12}, {180, 12}, {198, 12}, {216, 12},
-        {126, 24}, {144, 24}, {162, 24}, {180, 24}, {198, 24}, {216, 24},
-        {126, 36}, {144, 36}, {162, 36}, {180, 36}, {198, 36}, {216, 36},
-        {126, 48}, {144, 48}, {162, 48}, {180, 48}, {198, 48}, {216, 48}
+        {128, 0},  {144, 0},  {160, 0},  {176, 0},  {192, 0},  {208, 0},
+        {128, 12}, {144, 12}, {160, 12}, {176, 12}, {192, 12}, {208, 12},
+        {128, 24}, {144, 24}, {160, 24}, {176, 24}, {192, 24}, {208, 24},
+        {128, 36}, {144, 36}, {160, 36}, {176, 36}, {192, 36}, {208, 36},
+    {112, 48}, {123, 48}, {136, 48}
     },
     // LED Index to Flag
     {
         // left hand
         LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
         LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
-        LED_FLAG_MODIFIER, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
-        LED_FLAG_MODIFIER, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
-        LED_FLAG_NONE, LED_FLAG_NONE, LED_FLAG_NONE, LED_FLAG_MODIFIER, LED_FLAG_ALL, LED_FLAG_MODIFIER,
+        LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
+        LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
+        LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
 
         // Right hand
         LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
         LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
         LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
-        LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_MODIFIER,
-        LED_FLAG_MODIFIER, LED_FLAG_ALL, LED_FLAG_MODIFIER, LED_FLAG_NONE, LED_FLAG_NONE, LED_FLAG_NONE
+        LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL,
+        LED_FLAG_ALL, LED_FLAG_ALL, LED_FLAG_ALL
     }
 };
 #endif

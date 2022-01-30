@@ -82,7 +82,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENABLE_RGB_MATRIX_BAND_PINWHEEL_VAL
 
 // Default RGB mode on startup
-#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_BREATHING
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_BAND_PINWHEEL_VAL
+#define RGB_MATRIX_SPLIT { DRIVER_1_LED_TOTAL, DRIVER_2_LED_TOTAL }
 
 //#define LED_NUM_LOCK_PIN B0
 //#define LED_CAPS_LOCK_PIN B1
