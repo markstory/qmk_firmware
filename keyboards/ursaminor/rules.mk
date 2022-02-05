@@ -22,6 +22,8 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth
 AUDIO_ENABLE = no           # Audio output
 CUSTOM_MATRIX = lite        # Use custom matrix handlers
 
+NO_USB_STARTUP_CHECK = yes
+
 # Comment these out for the base version
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = IS31FL3733
