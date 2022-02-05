@@ -188,9 +188,7 @@ static matrix_row_t read_cols(uint8_t row) {
     } else {
         // we don't need a 30us delay anymore, because selecting a
         // right-hand row requires more than 30us for i2c.
-        if (mcp23017_status) {  // if there was an error
-            return 0;
-        } else {
+        if (!mcp23017_status) {
             uint8_t buf[]   = {MCP23017_GPIOA};
             mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), MCP23017_I2C_TIMEOUT);
             // We read all the pins on GPIOA.
@@ -204,6 +202,9 @@ static matrix_row_t read_cols(uint8_t row) {
             }
             return data[0];
         }
+
+        // if there was an error reading from the io expander.
+        return 0;
     }
 }
 
@@ -241,9 +242,7 @@ static void select_row(uint8_t row) {
         writePinLow(pin);
     } else {
         // select on mcp23017
-        if (mcp23017_status) {  // if there was an error
-                                // do nothing
-        } else {
+        if (!mcp23017_status) {
             // Select the desired row by writing a byte for the entire GPIOB bus where only the bit representing the row we want to select is a zero (write instruction) and every other bit is a one.
             // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to MATRIX_ROWS, but the pins we want to write to are indexed from zero up on the GPIOB bus.
             uint8_t buf[]   = {MCP23017_GPIOB, 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE))};
