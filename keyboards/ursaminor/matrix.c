@@ -61,11 +61,6 @@ extern i2c_status_t mcp23017_status;
 bool         i2c_initialized = 0;
 i2c_status_t mcp23017_status = I2C_ADDR;
 
-#define I2C2_SCL_BANK GPIOB
-#define I2C2_SCL 10
-#define I2C2_SDA_BANK GPIOB
-#define I2C2_SDA 11
-
 uint8_t init_mcp23017(void) {
     print("init mcp23017\n");
     mcp23017_status = I2C_ADDR;
@@ -118,8 +113,6 @@ static void init_mcu_pins(void) {
 }
 
 void matrix_init_custom(void) {
-    debug_enable = true;
-    debug_matrix = true;
     dprint("matrix_init_custom\n");
     // initialize row and col
     init_mcu_pins();
@@ -154,6 +147,9 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
                 print("right side not responding\n");
             } else {
                 print("right side attached\n");
+                // Restart RGB when the right side
+                // is reattached.
+                rgb_matrix_init();
             }
         }
     }
