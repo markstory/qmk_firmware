@@ -59,12 +59,14 @@ extern i2c_status_t mcp23017_status;
 bool         i2c_initialized = 0;
 i2c_status_t mcp23017_status = I2C_ADDR;
 
+static const pin_t row_pins[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
+static const pin_t col_pins[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_MCU;
+
 // --
 // -- Row selection functions
 // --
 static void unselect_row(uint8_t row) {
-    pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
-    setPinInputHigh(matrix_row_pins_mcu[row]);
+    setPinInputHigh(row_pins[row]);
 }
 
 static void unselect_rows(void) {
@@ -73,16 +75,14 @@ static void unselect_rows(void) {
     // direction
 
     // unselect rows on microcontroller
-    pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
     for (int pin_index = 0; pin_index < MATRIX_ROWS_PER_SIDE; pin_index++) {
-        pin_t pin = matrix_row_pins_mcu[pin_index];
+        pin_t pin = row_pins[pin_index];
         setPinInputHigh(pin);
     }
 }
 static void unselect_cols(void) {
-    pin_t matrix_col_pins_mcu[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_MCU;
     for (int pin_index = 0; pin_index < MATRIX_COLS_PER_SIDE; pin_index++) {
-        pin_t pin = matrix_col_pins_mcu[pin_index];
+        pin_t pin = col_pins[pin_index];
         setPinInputHigh(pin);
     }
 }
@@ -90,8 +90,7 @@ static void unselect_cols(void) {
 static void select_row(uint8_t row) {
     if (row < MATRIX_ROWS_PER_SIDE) {
         // select on MCU
-        pin_t matrix_row_pins_mcu[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
-        pin_t pin                                       = matrix_row_pins_mcu[row];
+        pin_t pin = row_pins[row];
         setPinOutput(pin);
         writePinLow(pin);
     } else {
@@ -108,13 +107,13 @@ static void select_row(uint8_t row) {
 static matrix_row_t read_cols(uint8_t row) {
     select_row(row);
     if (row < MATRIX_ROWS_PER_SIDE) {
-        pin_t        matrix_col_pins_mcu[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_MCU;
-        matrix_row_t current_row_value                         = 0;
+        matrix_row_t current_row_value = 0;
         matrix_io_delay();
+
         // For each col...
         for (uint8_t col_index = 0; col_index < MATRIX_COLS_PER_SIDE; col_index++) {
             // Select the col pin to read (active low)
-            uint8_t pin_state = readPin(matrix_col_pins_mcu[col_index]);
+            uint8_t pin_state = readPin(col_pins[col_index]);
 
             // Populate the matrix row with the state of the col pin
             current_row_value |= pin_state ? 0 : (MATRIX_ROW_SHIFTER << col_index);
