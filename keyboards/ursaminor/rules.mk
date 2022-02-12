@@ -28,5 +28,6 @@ NO_USB_STARTUP_CHECK = yes
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = IS31FL3733
 
-SRC += matrix.c
+VPATH += drivers/gpio
+SRC += mcp23018.c matrix.c
 QUANTUM_LIB_SRC += i2c_master.c
