@@ -76,23 +76,23 @@ static void unselect_rows(void) {
 
     // unselect rows on microcontroller
     for (int pin_index = 0; pin_index < MATRIX_ROWS_PER_SIDE; pin_index++) {
-        pin_t pin = row_pins[pin_index];
-        setPinInputHigh(pin);
+        setPinInputHigh(row_pins[pin_index]);
     }
 }
+
+// TODO are column functions necessary? The viktus doesn't have these functions
 static void unselect_cols(void) {
+    // Unselect colum
     for (int pin_index = 0; pin_index < MATRIX_COLS_PER_SIDE; pin_index++) {
-        pin_t pin = col_pins[pin_index];
-        setPinInputHigh(pin);
+        setPinInputHigh(col_pins[pin_index]);
     }
 }
 
 static void select_row(uint8_t row) {
     if (row < MATRIX_ROWS_PER_SIDE) {
         // select on MCU
-        pin_t pin = row_pins[row];
-        setPinOutput(pin);
-        writePinLow(pin);
+        setPinOutput(row_pins[row]);
+        writePinLow(row_pins[row]);
     } else {
         // select on mcp23017
         if (!mcp23017_status) {
