@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * abstractions and use the macros defined in config.h for the wiring as opposed
  * to repeating that information all over the place.
  */
-#include QMK_KEYBOARD_H
+#include "quantum.h"
 #include "i2c_master.h"
 #include <print.h>
 
@@ -61,6 +61,10 @@ i2c_status_t mcp23017_status = I2C_ADDR;
 
 static const pin_t row_pins[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
 static const pin_t col_pins[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_MCU;
+
+/* matrix state(1:on, 0:off) */
+static matrix_row_t matrix[MATRIX_ROWS];  // debounced values
+static uint8_t mcp23017_reset_loop;
 
 // --
 // -- Row selection functions
@@ -108,14 +112,6 @@ static void select_row_mcp(uint8_t row) {
     mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), I2C_TIMEOUT);
 }
 
-static void select_row(uint8_t row) {
-    if (row < MATRIX_ROWS_PER_SIDE) {
-        select_row_mcu(row);
-    } else {
-        select_row_mcp(row);
-    }
-}
-
 static matrix_row_t read_cols_mcu(uint8_t current_row) {
     matrix_row_t current_row_value = 0;
     matrix_io_delay();
@@ -144,9 +140,14 @@ static matrix_row_t read_cols_mcp(uint8_t current_row) {
     uint8_t buf[]   = {MCP23017_GPIOA};
     mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), MCP23017_I2C_TIMEOUT);
     // We read all the pins on GPIOA.
-    // The initial state was all ones and any depressed key at a given column for the currently selected row will have its bit flipped to zero.
-    // The return value is a row as represented in the generic matrix code were the rightmost bits represent the lower columns and zeroes represent non-depressed keys while ones represent depressed keys.
-    // Since the pins connected to each columns are sequential, and counting from zero up (col 5 -> GPIOA0, col 6 -> GPIOA1 and so on), the only transformation needed is a bitwise not to swap all zeroes and ones.
+    // The initial state was all ones and any depressed key at a given column
+    // for the currently selected row will have its bit flipped to zero.
+    // The return value is a row as represented in the generic matrix code were
+    // the rightmost bits represent the lower columns and zeroes represent
+    // non-depressed keys while ones represent depressed keys.
+    // Since the pins connected to each columns are sequential, and counting
+    // from zero up (col 5 -> GPIOA0, col 6 -> GPIOA1 and so on), the only
+    // transformation needed is a bitwise not to swap all zeroes and ones.
     uint8_t data[] = {0};
     if (!mcp23017_status) {
         mcp23017_status = i2c_receive(I2C_ADDR_READ, data, sizeof(data), MCP23017_I2C_TIMEOUT);
@@ -155,26 +156,23 @@ static matrix_row_t read_cols_mcp(uint8_t current_row) {
     return data[0];
 }
 
-static matrix_row_t read_cols(uint8_t row) {
-    select_row(row);
-    if (row < MATRIX_ROWS_PER_SIDE) {
-        return read_cols_mcu(row);
-    } else {
-        return read_cols_mcp(row);
-    }
-}
-
 // Reads and stores a row, returning
 // whether a change occurred.
-static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t index) {
-    matrix_row_t temp = read_cols(index);
-    if (current_matrix[index] != temp) {
-        current_matrix[index] = temp;
-        return true;
+static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t current_row) {
+    matrix_row_t current_value = 0;
+    if (current_row < MATRIX_ROWS_PER_SIDE) {
+        select_row_mcu(current_row);
+        current_value = read_cols_mcu(current_row);
+    } else {
+        select_row_mcp(current_row);
+        current_value = read_cols_mcp(current_row);
     }
-    return false;
+    if (current_matrix[current_row] == current_value) {
+        return false;
+    }
+    current_matrix[current_row] = current_value;
+    return true;
 }
-
 
 uint8_t init_mcp23017(void) {
     print("init mcp23017\n");
@@ -211,11 +209,6 @@ uint8_t init_mcp23017(void) {
     return mcp23017_status;
 }
 
-/* matrix state(1:on, 0:off) */
-static matrix_row_t matrix[MATRIX_ROWS];  // debounced values
-
-static uint8_t mcp23017_reset_loop;
-
 static void init_mcu_pins(void) {
     unselect_rows();
     unselect_cols();
@@ -237,6 +230,11 @@ void matrix_init_custom(void) {
 }
 
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
+    bool changed = false;
+    for (uint8_t current_row = 0; current_row < MATRIX_ROWS_PER_SIDE; current_row++) {
+        changed |= store_matrix_row(current_matrix, current_row);
+    }
+
     if (mcp23017_status) {  // if there was an error
         if (++mcp23017_reset_loop == 0) {
             // if (++mcp23017_reset_loop >= 1300) {
@@ -255,16 +253,8 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
         }
     }
 
-    bool changed = false;
-    for (uint8_t i = 0; i < MATRIX_ROWS_PER_SIDE; i++) {
-        // select rows from left and right hands
-        uint8_t left_index  = i;
-        uint8_t right_index = i + MATRIX_ROWS_PER_SIDE;
-
-        changed |= store_matrix_row(current_matrix, left_index);
-        changed |= store_matrix_row(current_matrix, right_index);
-
-        unselect_rows();
+    for (uint8_t current_row = MATRIX_ROWS_PER_SIDE; current_row < MATRIX_ROWS; current_row++) {
+        changed |= store_matrix_row(current_matrix, current_row);
     }
 
     return changed;
