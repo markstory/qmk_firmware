@@ -88,58 +88,79 @@ static void unselect_cols(void) {
     }
 }
 
+static void select_row_mcu(uint8_t row) {
+    setPinOutput(row_pins[row]);
+    writePinLow(row_pins[row]);
+}
+
+static void select_row_mcp(uint8_t row) {
+    if (mcp23017_status) {
+        return;
+    }
+    // Select the desired row by writing a byte for the entire GPIOB bus where
+    // only the bit representing the row we want to select is a zero (write
+    // instruction) and every other bit is a one.
+    // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on
+    // the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to
+    // MATRIX_ROWS, but the pins we want to write to are indexed from zero up
+    // on the GPIOB bus.
+    uint8_t buf[]   = {MCP23017_GPIOB, 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE))};
+    mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), I2C_TIMEOUT);
+}
+
 static void select_row(uint8_t row) {
     if (row < MATRIX_ROWS_PER_SIDE) {
-        // select on MCU
-        setPinOutput(row_pins[row]);
-        writePinLow(row_pins[row]);
+        select_row_mcu(row);
     } else {
-        // select on mcp23017
-        if (!mcp23017_status) {
-            // Select the desired row by writing a byte for the entire GPIOB bus where only the bit representing the row we want to select is a zero (write instruction) and every other bit is a one.
-            // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to MATRIX_ROWS, but the pins we want to write to are indexed from zero up on the GPIOB bus.
-            uint8_t buf[]   = {MCP23017_GPIOB, 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE))};
-            mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), I2C_TIMEOUT);
-        }
+        select_row_mcp(row);
     }
+}
+
+static matrix_row_t read_cols_mcu(uint8_t current_row) {
+    matrix_row_t current_row_value = 0;
+    matrix_io_delay();
+
+    // For each col...
+    for (uint8_t col_index = 0; col_index < MATRIX_COLS_PER_SIDE; col_index++) {
+        // Select the col pin to read (active low)
+        uint8_t pin_state = readPin(col_pins[col_index]);
+
+        // Populate the matrix row with the state of the col pin
+        current_row_value |= pin_state ? 0 : (MATRIX_ROW_SHIFTER << col_index);
+    }
+    unselect_row(current_row);
+
+    return current_row_value;
+}
+
+static matrix_row_t read_cols_mcp(uint8_t current_row) {
+    if (mcp23017_status) {
+        // if there was an error reading from the io expander.
+        return 0;
+    }
+
+    // we don't need a 30us delay anymore, because selecting a
+    // right-hand row requires more than 30us for i2c.
+    uint8_t buf[]   = {MCP23017_GPIOA};
+    mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), MCP23017_I2C_TIMEOUT);
+    // We read all the pins on GPIOA.
+    // The initial state was all ones and any depressed key at a given column for the currently selected row will have its bit flipped to zero.
+    // The return value is a row as represented in the generic matrix code were the rightmost bits represent the lower columns and zeroes represent non-depressed keys while ones represent depressed keys.
+    // Since the pins connected to each columns are sequential, and counting from zero up (col 5 -> GPIOA0, col 6 -> GPIOA1 and so on), the only transformation needed is a bitwise not to swap all zeroes and ones.
+    uint8_t data[] = {0};
+    if (!mcp23017_status) {
+        mcp23017_status = i2c_receive(I2C_ADDR_READ, data, sizeof(data), MCP23017_I2C_TIMEOUT);
+        data[0]         = ~(data[0]);
+    }
+    return data[0];
 }
 
 static matrix_row_t read_cols(uint8_t row) {
     select_row(row);
     if (row < MATRIX_ROWS_PER_SIDE) {
-        matrix_row_t current_row_value = 0;
-        matrix_io_delay();
-
-        // For each col...
-        for (uint8_t col_index = 0; col_index < MATRIX_COLS_PER_SIDE; col_index++) {
-            // Select the col pin to read (active low)
-            uint8_t pin_state = readPin(col_pins[col_index]);
-
-            // Populate the matrix row with the state of the col pin
-            current_row_value |= pin_state ? 0 : (MATRIX_ROW_SHIFTER << col_index);
-        }
-        unselect_row(row);
-        return current_row_value;
+        return read_cols_mcu(row);
     } else {
-        // we don't need a 30us delay anymore, because selecting a
-        // right-hand row requires more than 30us for i2c.
-        if (!mcp23017_status) {
-            uint8_t buf[]   = {MCP23017_GPIOA};
-            mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), MCP23017_I2C_TIMEOUT);
-            // We read all the pins on GPIOA.
-            // The initial state was all ones and any depressed key at a given column for the currently selected row will have its bit flipped to zero.
-            // The return value is a row as represented in the generic matrix code were the rightmost bits represent the lower columns and zeroes represent non-depressed keys while ones represent depressed keys.
-            // Since the pins connected to each columns are sequential, and counting from zero up (col 5 -> GPIOA0, col 6 -> GPIOA1 and so on), the only transformation needed is a bitwise not to swap all zeroes and ones.
-            uint8_t data[] = {0};
-            if (!mcp23017_status) {
-                mcp23017_status = i2c_receive(I2C_ADDR_READ, data, sizeof(data), MCP23017_I2C_TIMEOUT);
-                data[0]         = ~(data[0]);
-            }
-            return data[0];
-        }
-
-        // if there was an error reading from the io expander.
-        return 0;
+        return read_cols_mcp(row);
     }
 }
 
