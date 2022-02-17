@@ -25,15 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "quantum.h"
 #include "mcp23018.h"
-#include "i2c_master.h"
 #include <print.h>
 
-
-//extern i2c_status_t mcp23017_status;
-//#define I2C_TIMEOUT 100
-#define MCP23017_I2C_TIMEOUT 100
-#define I2C_WRITE 0x00
-#define I2C_READ 0x01
 
 // For a better understanding of the i2c protocol, this is a good read:
 // https://www.robot-electronics.co.uk/i2c-tutorial
@@ -46,21 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // | 0  | 1  | 0  | 0  | A2 | A1 | A0 |
 // | 0  | 1  | 0  | 0  | 0  | 0  | 0  |
 #define I2C_ADDR 0b0100000
-
-#define I2C_ADDR_WRITE ((I2C_ADDR << 1) | I2C_WRITE)
-#define I2C_ADDR_READ ((I2C_ADDR << 1) | I2C_READ)
-
-// Register addresses
-// See https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library/blob/master/Adafruit_MCP23017.h
-#define IODIRA 0x00  // i/o direction register
-#define IODIRB 0x01
-#define GPPUA 0x0C  // GPIO pull-up resistor register
-#define GPPUB 0x0D
-#define MCP23017_GPIOA 0x12  // general purpose i/o port register (write modifies OLAT)
-#define MCP23017_GPIOB 0x13
-
-//bool         i2c_initialized = 0;
-//i2c_status_t mcp23017_status = I2C_ADDR;
 
 static uint8_t mcp23017_error = 0;
 static uint16_t mcp23017_reset_loop = 0;
@@ -201,10 +179,13 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     }
 
     if (mcp23017_error) {  // if there was an error
-        print("mcp error!\n");
-        if (++mcp23017_reset_loop == 0) {
-            print("trying to reset mcp23017\n");
+        print("right side disconnected!\n");
+        if (++mcp23017_reset_loop > 0xFF) {
+            print("Attempting to reset mcp23017\n");
+            mcp23017_error = 0;
+            mcp23017_reset_loop = 0;
             init_pins_mcp23017();
+
             if (mcp23017_error) {
                 print("right side not responding\n");
             } else {
@@ -214,6 +195,7 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
                 rgb_matrix_init();
             }
         }
+        return changed;
     }
 
     for (uint8_t current_row = MATRIX_ROWS_PER_SIDE; current_row < MATRIX_ROWS; current_row++) {
