@@ -24,11 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * to repeating that information all over the place.
  */
 #include "quantum.h"
+#include "mcp23018.h"
 #include "i2c_master.h"
 #include <print.h>
 
-extern i2c_status_t mcp23017_status;
-#define I2C_TIMEOUT 100
+
+//extern i2c_status_t mcp23017_status;
+//#define I2C_TIMEOUT 100
 #define MCP23017_I2C_TIMEOUT 100
 #define I2C_WRITE 0x00
 #define I2C_READ 0x01
@@ -44,6 +46,7 @@ extern i2c_status_t mcp23017_status;
 // | 0  | 1  | 0  | 0  | A2 | A1 | A0 |
 // | 0  | 1  | 0  | 0  | 0  | 0  | 0  |
 #define I2C_ADDR 0b0100000
+
 #define I2C_ADDR_WRITE ((I2C_ADDR << 1) | I2C_WRITE)
 #define I2C_ADDR_READ ((I2C_ADDR << 1) | I2C_READ)
 
@@ -56,15 +59,14 @@ extern i2c_status_t mcp23017_status;
 #define MCP23017_GPIOA 0x12  // general purpose i/o port register (write modifies OLAT)
 #define MCP23017_GPIOB 0x13
 
-bool         i2c_initialized = 0;
-i2c_status_t mcp23017_status = I2C_ADDR;
+//bool         i2c_initialized = 0;
+//i2c_status_t mcp23017_status = I2C_ADDR;
+
+static uint8_t mcp23017_error = 0;
+static uint16_t mcp23017_reset_loop = 0;
 
 static const pin_t row_pins[MATRIX_ROWS_PER_SIDE] = MATRIX_ROW_PINS_MCU;
 static const pin_t col_pins[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_MCU;
-
-/* matrix state(1:on, 0:off) */
-static matrix_row_t matrix[MATRIX_ROWS];  // debounced values
-static uint8_t mcp23017_reset_loop;
 
 // --
 // -- Row selection functions
@@ -98,18 +100,17 @@ static void select_row_mcu(uint8_t row) {
 }
 
 static void select_row_mcp(uint8_t row) {
-    if (mcp23017_status) {
+    if (mcp23017_error) {
         return;
     }
-    // Select the desired row by writing a byte for the entire GPIOB bus where
-    // only the bit representing the row we want to select is a zero (write
-    // instruction) and every other bit is a one.
+    // Select the desired row by writing a byte to the GPIOB bus where
+    // the row we want to read is a 0 all other rows bits are a 1.
     // Note that the row - MATRIX_ROWS_PER_SIDE reflects the fact that being on
     // the right hand, the columns are numbered from MATRIX_ROWS_PER_SIDE to
     // MATRIX_ROWS, but the pins we want to write to are indexed from zero up
     // on the GPIOB bus.
-    uint8_t buf[]   = {MCP23017_GPIOB, 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE))};
-    mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), I2C_TIMEOUT);
+    uint8_t mask = 0xFF & ~(1 << (row - MATRIX_ROWS_PER_SIDE));
+    mcp23017_error += !mcp23018_set_output(I2C_ADDR, mcp23018_PORTB, mask);
 }
 
 static matrix_row_t read_cols_mcu(uint8_t current_row) {
@@ -130,30 +131,26 @@ static matrix_row_t read_cols_mcu(uint8_t current_row) {
 }
 
 static matrix_row_t read_cols_mcp(uint8_t current_row) {
-    if (mcp23017_status) {
+    if (mcp23017_error) {
         // if there was an error reading from the io expander.
         return 0;
     }
+    select_row_mcp(current_row);
 
-    // we don't need a 30us delay anymore, because selecting a
-    // right-hand row requires more than 30us for i2c.
-    uint8_t buf[]   = {MCP23017_GPIOA};
-    mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), MCP23017_I2C_TIMEOUT);
-    // We read all the pins on GPIOA.
-    // The initial state was all ones and any depressed key at a given column
-    // for the currently selected row will have its bit flipped to zero.
+    // Read all pins from the MCP23017
+    // We will get both GPIOA & GPIOB as u16.
     // The return value is a row as represented in the generic matrix code were
     // the rightmost bits represent the lower columns and zeroes represent
     // non-depressed keys while ones represent depressed keys.
-    // Since the pins connected to each columns are sequential, and counting
-    // from zero up (col 5 -> GPIOA0, col 6 -> GPIOA1 and so on), the only
-    // transformation needed is a bitwise not to swap all zeroes and ones.
-    uint8_t data[] = {0};
-    if (!mcp23017_status) {
-        mcp23017_status = i2c_receive(I2C_ADDR_READ, data, sizeof(data), MCP23017_I2C_TIMEOUT);
-        data[0]         = ~(data[0]);
-    }
-    return data[0];
+    uint16_t data = 0;
+    mcp23017_error += !mcp23018_readPins_all(I2C_ADDR, &data);
+
+    // Remove the high 8 bits as they are GPOIB, and we want to read GPIOA
+    uint8_t col_data = data;
+
+    // Invert the bits as we get 1 for open keys and 0 for closed
+    // ones from the mcp23017, but QMK wants active keys to be 1
+    return (~col_data);
 }
 
 // Reads and stores a row, returning
@@ -174,42 +171,14 @@ static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t curre
     return true;
 }
 
-uint8_t init_mcp23017(void) {
-    print("init mcp23017\n");
-    mcp23017_status = I2C_ADDR;
-
-    // I2C subsystem
-    if (i2c_initialized == 0) {
-        i2c_init();  // on pins D(1,0)
-        i2c_initialized = true;
-        wait_ms(MCP23017_I2C_TIMEOUT);
-    }
-
-    // set pin direction
-    // - unused  : input  : 1
-    // - input   : input  : 1
-    // - driving : output : 0
-    // This means: we will read all the bits on GPIOA
-    // This means: we will write to the pins 0-5 on GPIOB (in select_rows)
-    uint8_t buf[] = {IODIRA, 0b11111111, 0b11100000};
-    print("before transmit\n");
-    mcp23017_status = i2c_transmit(I2C_ADDR_WRITE, buf, sizeof(buf), MCP23017_I2C_TIMEOUT);
-    uprintf("after transmit %i\n", mcp23017_status);
-    if (!mcp23017_status) {
-        // set pull-up
-        // - unused  : on  : 1
-        // - input   : on  : 1
-        // - driving : off : 0
-        // This means: we will read all the bits on GPIOA
-        // This means: we will write to the pins 0-5 on GPIOB (in select_rows)
-        uint8_t pullup_buf[] = {GPPUA, 0b11111111, 0b11100000};
-        mcp23017_status      = i2c_transmit(I2C_ADDR_WRITE, pullup_buf, sizeof(pullup_buf), MCP23017_I2C_TIMEOUT);
-        uprintf("after transmit2 %i\n", mcp23017_status);
-    }
-    return mcp23017_status;
+static void init_pins_mcp23017(void) {
+    // This means: we will read all the bits on GPIOA (in read_cols_mcp)
+    mcp23017_error += !mcp23018_set_config(I2C_ADDR, mcp23018_PORTA, 0b11111111);
+    // This means: we will write to the pins 0-5 on GPIOB (in select_rows_mcp)
+    mcp23017_error += !mcp23018_set_config(I2C_ADDR, mcp23018_PORTB, 0b11100000);
 }
 
-static void init_mcu_pins(void) {
+static void init_pins_mcu(void) {
     unselect_rows();
     unselect_cols();
 }
@@ -218,15 +187,11 @@ static void init_mcu_pins(void) {
 // -- Custom Matrix Implementation
 // --
 void matrix_init_custom(void) {
-    dprint("matrix_init_custom\n");
     // initialize row and col
-    init_mcu_pins();
-    mcp23017_status = init_mcp23017();
+    mcp23018_init(I2C_ADDR);
 
-    // initialize matrix state: all keys off
-    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
-        matrix[i] = 0;
-    }
+    init_pins_mcu();
+    init_pins_mcp23017();
 }
 
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
@@ -235,14 +200,12 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
         changed |= store_matrix_row(current_matrix, current_row);
     }
 
-    if (mcp23017_status) {  // if there was an error
+    if (mcp23017_error) {  // if there was an error
+        print("mcp error!\n");
         if (++mcp23017_reset_loop == 0) {
-            // if (++mcp23017_reset_loop >= 1300) {
-            // since mcp23017_reset_loop is 8 bit - we'll try to reset once in 255 matrix scans
-            // this will be approx bit more frequent than once per second
             print("trying to reset mcp23017\n");
-            mcp23017_status = init_mcp23017();
-            if (mcp23017_status) {
+            init_pins_mcp23017();
+            if (mcp23017_error) {
                 print("right side not responding\n");
             } else {
                 print("right side attached\n");
