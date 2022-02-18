@@ -49,30 +49,11 @@ static const pin_t col_pins[MATRIX_COLS_PER_SIDE] = MATRIX_COL_PINS_MCU;
 // --
 // -- Row selection functions
 // --
-static void unselect_row(uint8_t row) {
+inline static void unselect_row(uint8_t row) {
     setPinInputHigh(row_pins[row]);
 }
 
-static void unselect_rows(void) {
-    // no need to unselect on mcp23017, because the select step sets all
-    // the other row bits high, and it's not changing to a different
-    // direction
-
-    // unselect rows on microcontroller
-    for (int pin_index = 0; pin_index < MATRIX_ROWS_PER_SIDE; pin_index++) {
-        setPinInputHigh(row_pins[pin_index]);
-    }
-}
-
-// TODO are column functions necessary? The viktus doesn't have these functions
-static void unselect_cols(void) {
-    // Unselect colum
-    for (int pin_index = 0; pin_index < MATRIX_COLS_PER_SIDE; pin_index++) {
-        setPinInputHigh(col_pins[pin_index]);
-    }
-}
-
-static void select_row_mcu(uint8_t row) {
+inline static void select_row_mcu(uint8_t row) {
     setPinOutput(row_pins[row]);
     writePinLow(row_pins[row]);
 }
@@ -94,6 +75,8 @@ static void select_row_mcp(uint8_t row) {
 static matrix_row_t read_cols_mcu(uint8_t current_row) {
     matrix_row_t current_row_value = 0;
     matrix_io_delay();
+
+    select_row_mcu(current_row);
 
     // For each col...
     for (uint8_t col_index = 0; col_index < MATRIX_COLS_PER_SIDE; col_index++) {
@@ -136,10 +119,8 @@ static matrix_row_t read_cols_mcp(uint8_t current_row) {
 static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t current_row) {
     matrix_row_t current_value = 0;
     if (current_row < MATRIX_ROWS_PER_SIDE) {
-        select_row_mcu(current_row);
         current_value = read_cols_mcu(current_row);
     } else {
-        select_row_mcp(current_row);
         current_value = read_cols_mcp(current_row);
     }
     if (current_matrix[current_row] == current_value) {
@@ -149,6 +130,9 @@ static inline bool store_matrix_row(matrix_row_t current_matrix[], uint8_t curre
     return true;
 }
 
+// --
+// -- Init functions
+// --
 static void init_pins_mcp23017(void) {
     // This means: we will read all the bits on GPIOA (in read_cols_mcp)
     mcp23017_error += !mcp23018_set_config(I2C_ADDR, mcp23018_PORTA, 0b11111111);
@@ -157,8 +141,18 @@ static void init_pins_mcp23017(void) {
 }
 
 static void init_pins_mcu(void) {
-    unselect_rows();
-    unselect_cols();
+    // Unselect rows on microcontroller
+    for (int pin_index = 0; pin_index < MATRIX_ROWS_PER_SIDE; pin_index++) {
+        setPinInputHigh(row_pins[pin_index]);
+    }
+    // Unselect colum
+    for (int pin_index = 0; pin_index < MATRIX_COLS_PER_SIDE; pin_index++) {
+        setPinInputHigh(col_pins[pin_index]);
+    }
+
+    // no need to unselect on mcp23017, because the select step sets all
+    // the other row bits high, and it's not changing to a different
+    // direction
 }
 
 // --
