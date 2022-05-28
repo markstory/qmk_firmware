@@ -184,9 +184,11 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
                 print("right side not responding\n");
             } else {
                 print("right side attached\n");
+#if RGB_MATRIX_ENABLE
                 // Restart RGB when the right side
                 // is reattached.
                 rgb_matrix_init();
+#endif
             }
         }
         return changed;
