@@ -36,20 +36,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     // LOWER (symbols and navigation)
     [_LOWER] = LAYOUT(
-        KC_NO,    KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_TRNS,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,   KC_LCBR, KC_RCBR, KC_LBRC,  KC_RBRC,  KC_TRNS,
-        KC_LCTRL, KC_LALT, KC_LSHIFT, KC_HOME, KC_PGUP,   KC_NO,        KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_EQUAL, KC_TRNS,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_END,  KC_PGDOWN, KC_NO,        KC_NO,   KC_UNDS, KC_MINS, KC_GT,    KC_PLUS,  KC_TRNS,
+        KC_NO,    KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,     KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_TRNS,
+        KC_TRNS,  KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,     KC_LCBR, KC_RCBR, KC_LBRC,  KC_RBRC,  KC_TRNS,
+        KC_LCTRL, KC_LALT, KC_LSHIFT, KC_HOME, KC_PGUP,   KC_NO,        KC_LEFT,   KC_DOWN, KC_UP,   KC_RIGHT, KC_EQUAL, KC_TRNS,
+        KC_TRNS,  KC_NO,   KC_NO,     KC_END,  KC_PGDOWN, KC_TILDE,     KC_GRAVE,  KC_UNDS, KC_MINS, KC_GT,    KC_PLUS,  KC_TRNS,
                              KC_TRNS, KC_TRNS, KC_TRNS,                    KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
     // RAISE f-keys, media controls
     [_RAISE] = LAYOUT(
-        KC_F12,  KC_F1,   KC_F2,   KC_F3,            KC_F4,   KC_F5,     KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
-        KC_TRNS, KC_NO,   RGB_TOG, RGB_MODE_FORWARD, RGB_HUI, RGB_HUD,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
-        KC_TRNS, KC_MPRV, KC_MNXT, KC_VOLU,          RGB_SAI, RGB_SAD,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
-        KC_TRNS, KC_MSTP, KC_MPLY, KC_VOLD,          RGB_VAI, RGB_VAD,     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_TRNS,
-                         KC_TRNS, KC_TRNS, KC_TRNS,                       KC_TRNS, KC_TRNS, KC_TRNS
+        KC_F12,  KC_F1,   KC_F2,   KC_F3,            KC_F4,   KC_F5,      KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
+        KC_TRNS, KC_NO,   RGB_TOG, RGB_MODE_FORWARD, RGB_HUI, RGB_HUD,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
+        KC_TRNS, KC_MPRV, KC_MNXT, KC_VOLU,          RGB_SAI, RGB_SAD,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
+        KC_TRNS, KC_MSTP, KC_MPLY, KC_VOLD,          RGB_VAI, RGB_VAD,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_TRNS,                          KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
     // NUMPAD numeric pad and symbols
