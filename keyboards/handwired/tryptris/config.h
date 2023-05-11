@@ -115,6 +115,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Use permissive hold mode */
 #define PERMISSIVE_HOLD
 
+/* Wait on wakeup to help with board waking up from machine sleep */
+#define USB_SUSPEND_WAKEUP_DELAY 200
+
 /* If defined, GRAVE_ESC will always act as ESC when CTRL is held.
  * This is useful for the Windows task manager shortcut (ctrl+shift+esc).
  */
