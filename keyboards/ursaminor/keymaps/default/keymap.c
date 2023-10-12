@@ -55,8 +55,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // NUMPAD numeric pad and symbols
     [_NUMPAD] = LAYOUT(
         KC_NO,    KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,    KC_NO, KC_NO, KC_NO, KC_NO,    KC_NO,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_MINS,  KC_7,  KC_8,  KC_9,  KC_EQUAL,  KC_NO,
-        KC_LCTRL, KC_LALT, KC_LSHIFT, KC_NO, KC_NO, KC_NO,          KC_SLASH, KC_4,  KC_5,  KC_6,  KC_PLUS, KC_NO,
+        KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_PLUS,  KC_7,  KC_8,  KC_9,  KC_SLASH,  KC_NO,
+        KC_LCTRL, KC_LALT, KC_LSHIFT, KC_NO, KC_NO, KC_NO,          KC_EQUAL, KC_4,  KC_5,  KC_6,  KC_MINS, KC_NO,
         KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,    KC_1,  KC_2,  KC_3,  KC_DOT,  KC_NO,
                        KC_TRNS, KC_TRNS, KC_TRNS,                      KC_TRNS, KC_0, KC_TRNS
     )
