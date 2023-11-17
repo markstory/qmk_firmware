@@ -34,21 +34,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             MO(_LOWER), KC_ENT, GUI_T(KC_ESC),                   ALT_T(KC_BSPACE), KC_SPACE, MO(_RAISE)
     ),
 
-    /* LOWER (symbols and navigation) */
+    /* LOWER (symbols and numbers) */
     [_LOWER] = LAYOUT(
         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,        KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO, KC_TRNS,
-        KC_TRNS, KC_AMPR, KC_ASTR, KC_MINS, KC_LPRN, KC_RPRN,      KC_TILD, KC_NO,   KC_PGDN, KC_PGUP,  KC_NO, KC_TRNS,
-        KC_TRNS, KC_DLR,  KC_PERC, KC_CIRC, KC_LCBR, KC_RCBR,      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_NO, KC_TRNS,
-        KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_LBRC, KC_RBRC,      KC_GRV,  KC_NO,   KC_END,  KC_HOME,  KC_NO, KC_TRNS,
-                            KC_TRNS, KC_TRNS, KC_TRNS,                  KC_TRNS, KC_TRNS, MO(_FUNC)
+        KC_TRNS, KC_AMPR, KC_ASTR, KC_MINS, KC_LPRN, KC_RPRN,      KC_SLSH,  KC_7,  KC_8,  KC_9,  KC_MINS, KC_TRNS,
+        KC_TRNS, KC_DLR,  KC_PERC, KC_CIRC, KC_LCBR, KC_RCBR,      KC_EQUAL, KC_4,  KC_5,  KC_6,  KC_MINS,  KC_TRNS,
+        KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_LBRC, KC_RBRC,      KC_UNDS,  KC_1,  KC_2,  KC_3,  KC_DOT,    KC_TRNS,
+                            KC_TRNS, KC_TRNS, KC_TRNS,                  KC_TRNS, KC_TRNS, LT(_FUNC, KC_0)
     ),
 
-    /* RAISE numeric pad and symbols */
+    /* RAISE symbols */
     [_RAISE] = LAYOUT(
         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,        KC_NO,    KC_NO, KC_NO, KC_NO, KC_NO,   KC_NO,
-        KC_TRNS, KC_AMPR, KC_ASTR, KC_MINS, KC_LPRN, KC_RPRN,      KC_SLSH,  KC_7,  KC_8,  KC_9,  KC_MINS, KC_TRNS,
-        KC_TRNS, KC_DLR,  KC_PERC, KC_CIRC, KC_LCBR, KC_RCBR,      KC_EQUAL, KC_4,  KC_5,  KC_6,  KC_DOT,  KC_TRNS,
-        KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_LBRC, KC_RBRC,      KC_TRNS,  KC_1,  KC_2,  KC_3,  KC_0,    KC_TRNS,
+        KC_TRNS, KC_AMPR, KC_ASTR, KC_MINS, KC_LPRN, KC_RPRN,      KC_TILD, KC_NO,   KC_PGDN, KC_PGUP,  KC_NO, KC_TRNS,
+        KC_TRNS, KC_DLR,  KC_PERC, KC_CIRC, KC_LCBR, KC_RCBR,      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_NO, KC_TRNS,
+        KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_LBRC, KC_RBRC,      KC_GRV,  KC_UNDS,   KC_END,  KC_HOME,  KC_NO, KC_TRNS,
                        MO(_FUNC), KC_TRNS, KC_TRNS,                     KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
