@@ -20,44 +20,44 @@ enum layer_names {
     _QWERTY,
     _LOWER,
     _RAISE,
-    _NUMPAD
+    _FUNC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    // Base
-    // Left hand                                             Right hand
+    /* Base */
+    /* Left hand                                             Right hand */
     [_QWERTY] = LAYOUT(
-        KC_GRAVE,  KC_1, KC_2, KC_3, KC_4, KC_5,             KC_6, KC_7, KC_8,     KC_9,   KC_0,      KC_DEL,
+        KC_GRV,    KC_1, KC_2, KC_3, KC_4, KC_5,             KC_6, KC_7, KC_8,     KC_9,   KC_0,      KC_DEL,
         KC_TAB,    KC_Q, KC_W, KC_E, KC_R, KC_T,             KC_Y, KC_U, KC_I,     KC_O,   KC_P,      KC_BSLASH,
         KC_LCTRL,  KC_A, KC_S, KC_D, KC_F, KC_G,             KC_H, KC_J, KC_K,     KC_L,   KC_SCOLON, KC_QUOTE,
         KC_LSHIFT, KC_Z, KC_X, KC_C, KC_V, KC_B,             KC_N, KC_M, KC_COMMA, KC_DOT, KC_SLASH,  KC_RSHIFT,
-               MO(_LOWER), LT(_NUMPAD, KC_ENT), GUI_T(KC_ESC),  ALT_T(KC_BSPACE), KC_SPACE, MO(_RAISE)
+            MO(_LOWER), KC_ENT, GUI_T(KC_ESC),                   ALT_T(KC_BSPACE), KC_SPACE, MO(_RAISE)
     ),
 
-    // LOWER (symbols and navigation)
+    /* LOWER (symbols and numbers) */
     [_LOWER] = LAYOUT(
-        KC_NO,    KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,     KC_NO,   KC_NO,   KC_NO,    KC_NO,    KC_TRNS,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_NO,   KC_NO,     KC_NO,        KC_NO,     KC_LCBR, KC_RCBR, KC_LBRC,  KC_RBRC,  KC_TRNS,
-        KC_LCTRL, KC_LALT, KC_LSHIFT, KC_HOME, KC_PGUP,   KC_NO,        KC_LEFT,   KC_DOWN, KC_UP,   KC_RIGHT, KC_EQUAL, KC_TRNS,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_END,  KC_PGDOWN, KC_TILDE,     KC_GRAVE,  KC_UNDS, KC_MINS, KC_GT,    KC_PLUS,  KC_TRNS,
-                             KC_TRNS, KC_TRNS, KC_TRNS,                    KC_TRNS, KC_TRNS, KC_TRNS
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,        KC_NO,   KC_NO, KC_NO, KC_NO, KC_NO,   KC_TRNS,
+        KC_TRNS, KC_AMPR, KC_ASTR, KC_UNDS, KC_LPRN, KC_RPRN,      KC_SLSH, KC_7,  KC_8,  KC_9,  KC_MINS, KC_TRNS,
+        KC_TRNS, KC_DLR,  KC_PERC, KC_CIRC, KC_LCBR, KC_RCBR,      KC_MINS, KC_4,  KC_5,  KC_6,  KC_EQL, KC_TRNS,
+        KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_LBRC, KC_RBRC,      KC_GRV,  KC_1,  KC_2,  KC_3,  KC_DOT,  KC_TRNS,
+                            KC_TRNS, KC_TRNS, KC_TRNS,                  KC_TRNS, KC_TRNS, LT(_FUNC, KC_0)
     ),
 
-    // RAISE f-keys, media controls
+    /* RAISE symbols and nav */
     [_RAISE] = LAYOUT(
-        KC_F12,  KC_F1,   KC_F2,   KC_F3,            KC_F4,   KC_F5,      KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
-        KC_TRNS, KC_NO,   RGB_TOG, RGB_MODE_FORWARD, RGB_HUI, RGB_HUD,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
-        KC_TRNS, KC_MPRV, KC_MNXT, KC_VOLU,          RGB_SAI, RGB_SAD,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
-        KC_TRNS, KC_MSTP, KC_MPLY, KC_VOLD,          RGB_VAI, RGB_VAD,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_TRNS,
-                         KC_TRNS, KC_TRNS, KC_TRNS,                          KC_TRNS, KC_TRNS, KC_TRNS
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,        KC_NO,   KC_NO,   KC_NO,   KC_NO,    KC_NO, KC_NO,
+        KC_TRNS, KC_AMPR, KC_ASTR, KC_UNDS, KC_LPRN, KC_RPRN,      KC_TILD, KC_NO,   KC_PGDN, KC_PGUP,  KC_NO, KC_TRNS,
+        KC_TRNS, KC_DLR,  KC_PERC, KC_CIRC, KC_LCBR, KC_RCBR,      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT, KC_NO, KC_TRNS,
+        KC_TRNS, KC_EXLM, KC_AT,   KC_HASH, KC_LBRC, KC_RBRC,      KC_GRV,  KC_UNDS, KC_END,  KC_HOME,  KC_NO, KC_TRNS,
+                       MO(_FUNC), KC_TRNS, KC_TRNS,                     KC_TRNS, KC_TRNS, KC_TRNS
     ),
 
-    // NUMPAD numeric pad and symbols
-    [_NUMPAD] = LAYOUT(
-        KC_NO,    KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,    KC_NO, KC_NO, KC_NO, KC_NO,    KC_NO,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_PLUS,  KC_7,  KC_8,  KC_9,  KC_SLASH,  KC_NO,
-        KC_LCTRL, KC_LALT, KC_LSHIFT, KC_NO, KC_NO, KC_NO,          KC_EQUAL, KC_4,  KC_5,  KC_6,  KC_MINS, KC_NO,
-        KC_TRNS,  KC_NO,   KC_NO,     KC_NO, KC_NO, KC_NO,          KC_NO,    KC_1,  KC_2,  KC_3,  KC_DOT,  KC_NO,
-                       KC_TRNS, KC_TRNS, KC_TRNS,                      KC_TRNS, KC_0, KC_TRNS
+    /* FUNC f-keys, media controls */
+    [_FUNC] = LAYOUT(
+        KC_NO,   KC_NO,   KC_NO,   KC_NO,            KC_NO,   KC_NO,          KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,  KC_NO,
+        KC_TRNS, KC_NO,   RGB_TOG, RGB_MODE_FORWARD, RGB_HUI, RGB_HUD,        KC_NO, KC_F7, KC_F8, KC_F9, KC_F12, KC_NO,
+        KC_TRNS, KC_MPRV, KC_MNXT, KC_VOLU,          RGB_SAI, RGB_SAD,        KC_NO, KC_F4, KC_F5, KC_F6, KC_F11, KC_NO,
+        KC_TRNS, KC_MSTP, KC_MPLY, KC_VOLD,          RGB_VAI, RGB_VAD,        KC_NO, KC_F1, KC_F2, KC_F3, KC_F10, KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_TRNS,                              KC_TRNS, KC_TRNS, KC_TRNS
     )
 };
